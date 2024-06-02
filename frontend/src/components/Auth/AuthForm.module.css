@@ -1,0 +1,52 @@
+.card {
+  margin-top: 100px;
+  width: 100%;
+  max-width: 400px;
+  padding: 15px;
+  box-shadow: 10%;
+}
+
+.form {
+  margin-top: 35px;
+  text-align: center;
+  /* padding: 0 10px; */
+}
+
+.btn {
+  position: relative;
+  margin-top: 5px;
+  display: inline-block;
+  /* padding: 10px 20px; */
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none;
+  color: #0a58ca;
+  border: none;
+  background: none;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.btn:before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 1px;
+  bottom: 0;
+  left: 50%;
+  background-color: #0a58ca;
+  transition: all 0.5s ease;
+}
+
+.btn:hover:before {
+  width: 100%;
+  left: 0;
+}
+
+.wrong {
+  border-color: red;
+}
+
+.right {
+  border-color: green;
+}
