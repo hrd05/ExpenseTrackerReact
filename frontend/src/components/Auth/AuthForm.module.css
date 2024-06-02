@@ -44,9 +44,12 @@
 }
 
 .wrong {
-  border-color: red;
+  /* border-color: red !important; */
+  /* border: 1px solid red !important; */
+  background-color: rgb(232, 189, 189) !important;
 }
 
 .right {
-  border-color: green;
+  /* border: 1px solid green !important; */
+  background-color: rgb(182, 220, 182) !important;
 }

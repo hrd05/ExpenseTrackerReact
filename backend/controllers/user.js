@@ -13,33 +13,34 @@ exports.getSignup = (req, res) => {
     res.sendFile(path.join(__dirname, '../', 'views', 'signup.html'));
 };
 
-exports.postSignup = (req, res) => {
-    const { name, email, password } = req.body;
+exports.postSignup = async (req, res) => {
+    const { email, password } = req.body;
+    // console.log(email, password, 'in postSigpup');
 
-    User.findOne({ email: email })
-        .then((user) => {
-            if (user) {
-                return res.status(409).json({ message: 'user with same email aleady exists' });
+    try {
+        const user = await User.findOne({ email: email })
+        if (user) {
+            return res.status(409).json({ message: 'user with same email aleady exists' });
+        }
+        else {
+            const hash = await bcrypt.hash(password, 10);
+            if (hash) {
+                await User.create({ email: email, password: hash })
+                res.status(201).json('User created successfully');
             }
             else {
-                return;
+                throw new Error('Error creating user');
             }
-        })
-
-    bcrypt.hash(password, 10, (err, hash) => {
-        // console.log(err);
-        User.create({ name, email, password: hash })
-            .then((user) => {
-                res.redirect('/login');
-            })
-            .catch(err => console.log(err));
-    })
-
+        }
+    }
+    catch (err) {
+        console.log(err);
+    }
 };
 
-exports.getLogin = (req, res) => {
-    res.sendFile(path.join(__dirname, '../', 'views', 'login.html'));
-};
+// exports.getLogin = (req, res) => {
+//     res.sendFile(path.join(__dirname, '../', 'views', 'login.html'));
+// };
 
 function generateAccessToken(id) {
     return jwt.sign({ userId: id }, 'd3ec4a17b9e89ca0527bba8eab6b546c3c75931f3c245a81503c81732d9d8ef4');
@@ -48,8 +49,8 @@ function generateAccessToken(id) {
 
 
 exports.postLogin = async (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
+    const { email, password } = req.body;
+    // console.log(email, password, 'post login');
 
     try {
         const user = await User.findOne({ email: email })
@@ -63,7 +64,7 @@ exports.postLogin = async (req, res) => {
             res.status(200).json({ message: 'User logged succesfully', token: generateAccessToken(user.id), user });
         }
         else {
-            res.status(401).json({ message: 'incorrect password' });
+            res.json({ message: 'incorrect password' });
         }
     } catch (err) {
         console.log(err);

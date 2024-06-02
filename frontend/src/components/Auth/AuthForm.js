@@ -1,38 +1,61 @@
 import { Button, Card, Container, Form, FormGroup } from "react-bootstrap";
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
 import classes from "./AuthForm.module.css";
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import AuthContext from "../../store/auth-context";
+
 
 const AuthForm = () => {
     const [login, setLogin] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPass, setConfirmPass] = useState('');
-    const [classPass, setClassPass] = useState('');
+    const authCtx = useContext(AuthContext);
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!login) {
-            if (password && confirmPass) {
-                if (password !== confirmPass) {
-                    setClassPass(classes.wrong);
-                } else {
-                    setClassPass(classes.right);
-                }
-            } else {
-                setClassPass(''); // Reset class when inputs are empty
+
+    const submitHandler = async (event) => {
+        event.preventDefault();
+        const body = {
+            email: email,
+            password: password
+        }
+        if (login) {
+            const response = await axios.post("http://localhost:3000/login", body);
+            console.log(response.data);
+            if (response.status === 401) {
+
+            }
+            if (response.status === 200) {
+                authCtx.login(response.data.token);
+                alert('Login successfull');
+                navigate('/home');
             }
         }
-    }, [password, confirmPass, login]);
-
-    const submitHandler = (event) => {
-        event.preventDefault();
-        console.log(email, password, confirmPass);
+        else {
+            if (password === confirmPass) {
+                const response = await axios.post("http://localhost:3000/signup", body);
+                console.log(response);
+                alert(response.data);
+                setPassword('');
+                setEmail('');
+                setConfirmPass('');
+                setLogin(true);
+            }
+            else {
+                alert("Password doesnt match");
+            }
+        }
     }
 
 
 
     const emailChangeHandler = (event) => setEmail(event.target.value);
     const passwordChangeHandler = (event) => setPassword(event.target.value);
-    const confirmPassChangeHandler = (event) => setConfirmPass(event.target.value);
+    const confirmPassChangeHandler = (event) => {
+        setConfirmPass(event.target.value);
+    }
 
 
 
@@ -67,7 +90,6 @@ const AuthForm = () => {
                                 placeholder="Confirm Password"
                                 value={confirmPass}
                                 onChange={confirmPassChangeHandler}
-                                className={classPass}
                                 required
                             ></Form.Control>
                         </FormGroup>}

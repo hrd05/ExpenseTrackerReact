@@ -7,14 +7,11 @@ const userController = require('../controllers/user');
 const expenseController = require('../controllers/expense');
 const userAunthentication = require('../middleware/auth');
 
-
-const { route } = require('./expense');
-
 router.get('/', userController.getSignup);
 
 router.post('/signup', userController.postSignup);
 
-router.get('/login', userController.getLogin);
+// router.get('/login', userController.getLogin);
 
 router.post('/login', userController.postLogin);
 
