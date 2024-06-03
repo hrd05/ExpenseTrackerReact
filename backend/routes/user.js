@@ -15,6 +15,8 @@ router.post('/signup', userController.postSignup);
 
 router.post('/login', userController.postLogin);
 
+router.post('/complete-profile', userAunthentication.authenticate, userController.postCompleteProfile)
+
 router.get('/user/download', userAunthentication.authenticate, expenseController.getDownload);
 
 router.post('/user/download', userController.postFileUrl);

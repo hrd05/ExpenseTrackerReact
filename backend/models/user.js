@@ -3,6 +3,13 @@ const { Schema, default: mongoose } = require('mongoose');
 const { stringify } = require('uuid');
 
 const userSchema = new Schema({
+
+    fullName: {
+        type: String,
+    },
+    photoUrl: {
+        type: String,
+    },
     email: {
         type: String,
         unique: true,

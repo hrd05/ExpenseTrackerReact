@@ -22,29 +22,42 @@ const AuthForm = () => {
             password: password
         }
         if (login) {
-            const response = await axios.post("http://localhost:3000/login", body);
-            console.log(response.data);
-            if (response.status === 401) {
-
-            }
-            if (response.status === 200) {
-                authCtx.login(response.data.token);
-                alert('Login successfull');
-                navigate('/home');
+            try {
+                const response = await axios.post("http://localhost:3000/login", body);
+                console.log(response);
+                if (response.status === 200) {
+                    // const { fullName, photoUrl } = response.data.user;
+                    // console.log(fullName, photoUrl);
+                    if (response.data.user.fullName && response.data.user.photoUrl) {
+                        console.log('profile complete');
+                        authCtx.completeProfile();
+                    }
+                    authCtx.login(response.data.token);
+                    alert('Login successfull');
+                    navigate('/home');
+                }
+            } catch (err) {
+                console.log(err);
+                alert(err.response.data.message);
             }
         }
         else {
-            if (password === confirmPass) {
-                const response = await axios.post("http://localhost:3000/signup", body);
-                console.log(response);
-                alert(response.data);
-                setPassword('');
-                setEmail('');
-                setConfirmPass('');
-                setLogin(true);
+            try {
+                if (password === confirmPass) {
+                    const response = await axios.post("http://localhost:3000/signup", body);
+                    console.log(response);
+                    alert(response.data);
+                    setPassword('');
+                    setEmail('');
+                    setConfirmPass('');
+                    setLogin(true);
+                }
+                else {
+                    alert("Password doesnt match");
+                }
             }
-            else {
-                alert("Password doesnt match");
+            catch (err) {
+                alert(err.response.data.message);
             }
         }
     }

@@ -7,6 +7,7 @@ const User = require('../models/user');
 const DownloadHistory = require('../models/download-history');
 // const { where } = require('sequelize');
 const { response } = require('express');
+const { default: mongoose } = require('mongoose');
 
 
 exports.getSignup = (req, res) => {
@@ -64,13 +65,32 @@ exports.postLogin = async (req, res) => {
             res.status(200).json({ message: 'User logged succesfully', token: generateAccessToken(user.id), user });
         }
         else {
-            res.json({ message: 'incorrect password' });
+            res.status(401).json({ message: 'incorrect password' });
         }
     } catch (err) {
         console.log(err);
         res.status(403).json({ message: 'something went wrong' });
     }
 };
+
+exports.postCompleteProfile = async (req, res) => {
+
+    const { fullName, url } = req.body;
+    const id = req.user._id;
+
+    try {
+        // console.log(fullName, url, id);
+        if (fullName && url) {
+            const user = await User.findByIdAndUpdate(id, { fullName: fullName, photoUrl: url })
+            console.log(user);
+            res.status(201).json({ message: 'profile updated' });
+        }
+
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
 
 
 exports.postFileUrl = (req, res) => {
