@@ -7,13 +7,18 @@ const AuthContext = React.createContext({
     login: (token) => { },
     logout: () => { },
     isProfileComplete: false,
-    completeProfile: () => { }
+    completeProfile: () => { },
+    isVerified: false,
+    verify: () => { }
 })
 
 export const AuthContextProvider = (props) => {
+    const emailVerified = localStorage.getItem('isVerified');
+    const profileComplete = localStorage.getItem('isProfileComplete');
     const initialToken = localStorage.getItem('token');
-    const [isProfileComplete, setIsProfileComplete] = useState(false);
+    const [isProfileComplete, setIsProfileComplete] = useState(profileComplete);
     const [token, setToken] = useState(initialToken);
+    const [isVerified, setVerified] = useState(emailVerified);
 
     const loginHandler = (token) => {
         setToken(token);
@@ -27,8 +32,13 @@ export const AuthContextProvider = (props) => {
 
     const completeProfileHandler = () => {
         setIsProfileComplete(true);
+        localStorage.setItem('isVerified', true);
     }
 
+    const verifyHandler = () => {
+        setVerified(true);
+        localStorage.setItem('isProfileComplete', true);
+    }
 
     const authContext = {
         isLogin: !!token,
@@ -36,7 +46,9 @@ export const AuthContextProvider = (props) => {
         login: loginHandler,
         logout: logoutHandler,
         isProfileComplete: isProfileComplete,
-        completeProfile: completeProfileHandler
+        completeProfile: completeProfileHandler,
+        isVerified: isVerified,
+        verify: verifyHandler
     }
 
     return (

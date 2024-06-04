@@ -8,6 +8,9 @@ const DownloadHistory = require('../models/download-history');
 // const { where } = require('sequelize');
 const { response } = require('express');
 const { default: mongoose } = require('mongoose');
+const services = require('../services/verify-email');
+const crypto = require('crypto');
+
 
 
 exports.getSignup = (req, res) => {
@@ -92,6 +95,48 @@ exports.postCompleteProfile = async (req, res) => {
     }
 }
 
+function generateVerificationToken() {
+    return crypto.randomBytes(32).toString('hex');
+}
+
+exports.verifyEmail = async (req, res) => {
+    const user = req.user;
+    try {
+        const token = generateVerificationToken();
+        console.log(token);
+        user.verifyToken = token
+        await user.save();
+        console.log(user, "In verify email");
+
+        await services.sendMailToVerify(user.email, token);
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
+exports.verifyTokenFromLink = async (req, res) => {
+    const { email, token } = req.query;
+    console.log(email, token, "verifying");
+    try {
+        const user = await User.findOne({ email, verifyToken: token });
+        console.log(user);
+
+        if (!user) {
+            return res.status(400).json("invalid token");
+        }
+
+        user.verified = true;
+        user.verifyToken = undefined;
+        await user.save();
+
+        res.send("Email verified successfully");
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json("internal server error");
+    }
+}
 
 exports.postFileUrl = (req, res) => {
     const fileUrl = req.body.fileURL;

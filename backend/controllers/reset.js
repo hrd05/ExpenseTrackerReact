@@ -5,19 +5,20 @@ const uuid = require('uuid');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const Forgotpassword = require('../models/forgot-password');
+require('dotenv').config();
 // const { ObjectId } = require('mongoose');
 const { ObjectId } = require('mongodb');
 // require('dotenv').config();
 
 
-const getforgotpassword = (req, res) => {
-    res.sendFile(path.join(__dirname, '../', 'views', 'reset.html'));
-}
+// const getforgotpassword = (req, res) => {
+//     res.sendFile(path.join(__dirname, '../', 'views', 'reset.html'));
+// }
 
 const transporter = nodemailer.createTransport({
-    service: 'Gmail', // use your email service provider here
+    service: 'gmail', // use your email service provider here
     auth: {
-        user: 'harshdunkhwal55@gmail.com', // your email
+        user: process.env.EMAIL, // your email
         pass: process.env.PASSWORD // your email password or an app-specific password
     }
 });
@@ -25,7 +26,9 @@ const transporter = nodemailer.createTransport({
 const forgotpassword = async (req, res) => {
     try {
         const { email } = req.body;
+        console.log(email);
         const user = await User.findOne({ email: email });
+        console.log(user);
         if (user) {
             const id = uuid.v4();
             await Forgotpassword.create({ _id: id, active: true, userId: user._id })
@@ -39,7 +42,7 @@ const forgotpassword = async (req, res) => {
                 from: 'harshdunkhwal55@gmail.com', // Replace with your email address
                 to: email,
                 subject: 'Password Reset',
-                text: 'HI this is just a dummy mail for testing',
+                text: 'Click the following link to update your password',
                 html: `<a href="http://localhost:3000/password/resetpassword/${id}">Reset password</a>`,
             };
 
@@ -54,7 +57,7 @@ const forgotpassword = async (req, res) => {
                 }
             });
         } else {
-            throw new Error('User doesn\'t exist');
+            throw new Error('User doesnt exist');
         }
     } catch (err) {
         console.error(err);
@@ -132,7 +135,6 @@ const updatepassword = (req, res) => {
 }
 
 module.exports = {
-    getforgotpassword,
     forgotpassword,
     updatepassword,
     resetpassword,

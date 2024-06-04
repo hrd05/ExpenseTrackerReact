@@ -6,7 +6,7 @@ const router = express.Router();
 const resetController = require('../controllers/reset');
 
 
-router.get('/password/forgotpassword', resetController.getforgotpassword);
+// router.get('/password/forgotpassword', resetController.getforgotpassword);
 
 router.get('/password/updatepassword/:resetpasswordid', resetController.updatepassword);
 

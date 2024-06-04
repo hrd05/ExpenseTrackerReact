@@ -26,6 +26,13 @@ const userSchema = new Schema({
     totalExpense: {
         type: Number,
         default: 0
+    },
+    verified: {
+        type: Boolean,
+        default: false
+    },
+    verifyToken: {
+        type: String
     }
 });
 

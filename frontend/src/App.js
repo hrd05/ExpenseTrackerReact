@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Home from './components/Body/Home';
 import AuthContext from './store/auth-context';
 import { useContext } from 'react';
+import ForgotPassForm from './components/Auth/ForgotPassForm';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path='/home' element={authCtx.isLogin ? <Home /> : <Navigate to="/auth" />} />
         <Route path='/auth' element={authCtx.isLogin ? <Navigate to='/home' /> : <AuthForm />} />
         <Route path='/' element={<Navigate to="/home" />} />
+        <Route path='/forgot-password' element={<ForgotPassForm />} />
       </Routes>
     </Router>
   );
