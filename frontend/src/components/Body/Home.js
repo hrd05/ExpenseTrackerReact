@@ -4,6 +4,8 @@ import AuthContext from "../../store/auth-context";
 import ProfileComponent from "../Auth/ProfileComponent";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import ExpenseForm from "../Expense/ExpenseForm";
+import ExpenseList from "../Expense/ExpenseList";
 
 const Home = () => {
     const authCtx = useContext(AuthContext);
@@ -25,8 +27,10 @@ const Home = () => {
                     <Alert.Link as={Link} onClick={verifyEmail} className="mx-1 p-0 btn-link-danger" >Verify Email</Alert.Link>
                 </Alert>
             }
-            <Container >
-                <h1>Hello Welcome to Expense Tracker</h1>
+            <Container className="mt-5 justify-content-center">
+                {/* <h1 className="d-flex justify-content-center mt-4">Hello Welcome to Expense Tracker</h1> */}
+                <ExpenseForm />
+                {/* <ExpenseList /> */}
             </Container>
         </>
 

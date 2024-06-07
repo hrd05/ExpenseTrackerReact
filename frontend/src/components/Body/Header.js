@@ -9,7 +9,7 @@ const Header = () => {
     const authCtx = useContext(AuthContext);
 
     return (
-        <Navbar className="navbar-dark bg-primary">
+        <Navbar className="navbar-dark bg-primary bg-gradient">
             <Container>
                 <Navbar.Brand href='#home' >ExpenseTracker</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />

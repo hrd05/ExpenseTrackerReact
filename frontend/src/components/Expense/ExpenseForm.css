@@ -1,0 +1,29 @@
+.expense-form-container {
+  /* align-items: center; */
+  min-height: 100vh;
+  background-color: #000000; /* Light background color */
+  padding: 20px;
+  border-radius: 1rem;
+}
+
+.expense-card {
+  width: 100%;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.expense-form {
+  padding: 20px;
+}
+
+.expense-form .form-control {
+  border-radius: 0.25rem;
+  border: 1px solid #ced4da;
+  margin-bottom: 1rem;
+}
+
+.expense-form .form-label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}

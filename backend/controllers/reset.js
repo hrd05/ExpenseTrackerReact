@@ -26,9 +26,7 @@ const transporter = nodemailer.createTransport({
 const forgotpassword = async (req, res) => {
     try {
         const { email } = req.body;
-        console.log(email);
         const user = await User.findOne({ email: email });
-        console.log(user);
         if (user) {
             const id = uuid.v4();
             await Forgotpassword.create({ _id: id, active: true, userId: user._id })

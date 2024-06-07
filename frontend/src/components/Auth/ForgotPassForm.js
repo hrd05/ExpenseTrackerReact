@@ -19,11 +19,15 @@ const ForgotPassForm = () => {
             if (response.status === 200) {
                 console.log(response);
                 setIsLoading(false);
-                alert("Mail sent to your registered mail");
+                alert(response.data.message);
+            }
+            else {
+                throw new Error("Check your email again");
             }
         }
         catch (err) {
             console.log(err);
+            alert(err);
         }
     }
 
