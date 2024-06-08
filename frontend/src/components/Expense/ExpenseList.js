@@ -1,17 +1,26 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Button, Card, Table, Container } from "react-bootstrap";
 import "./ExpenseList.css";
+import ExpenseContext from "../../store/expense-context";
 
-const DUMMY_EXPENSES = [
-    { name: 'Petrol', amount: '100', description: 'Petrol in car' },
-    { name: 'Shopping', amount: '2500', description: 'Birthday shopping' },
-    { name: 'Food', amount: '2000', description: 'Hangout with friends' },
-    { name: 'Food', amount: '1000', description: 'Hangout with friends' },
-    { name: 'Groceries', amount: '500', description: 'Vegetable purchase' },
-    { name: 'Food', amount: '2000', description: 'Hangout with friends' },
-];
 
-const ExpenseList = () => {
+const ExpenseList = (props) => {
+    const expenseCtx = useContext(ExpenseContext);
+
+    let totalAmount = 0;
+    expenseCtx.expenses.forEach((exp) => {
+        totalAmount = totalAmount + Number(exp.amount);
+    })
+
+    const deleteExpense = (e) => {
+        expenseCtx.deleteExpense(e.target.id);
+
+    }
+
+    const editExpense = (e) => {
+        props.editExpense(e.target.id);
+    }
+
     return (
         <Container className="expense-list-container">
             <Card className="mt-3 expense-card">
@@ -27,13 +36,14 @@ const ExpenseList = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {DUMMY_EXPENSES.map((expense, index) => (
+                                {expenseCtx.expenses.map((expense, index) => (
                                     <tr key={index}>
-                                        <td>{expense.name}</td>
+                                        <td>{expense.category}</td>
                                         <td>{expense.description}</td>
                                         <td>{expense.amount}</td>
                                         <td>
-                                            <Button variant="danger" size="sm">Delete</Button>
+                                            <Button id={expense._id} onClick={editExpense} variant="dark" className="mx-2" size="sm">Edit</Button>
+                                            <Button id={expense._id} onClick={deleteExpense} variant="danger" size="sm">Delete</Button>
                                         </td>
                                     </tr>
                                 ))}
@@ -41,6 +51,9 @@ const ExpenseList = () => {
                         </Table>
                     </div>
                 </Card.Body>
+                <Card.Footer className="d-flex justify-content-beginning text-bg-secondary bg-gradient">
+                    <h4>Total Spent: {totalAmount} Rs</h4>
+                </Card.Footer>
             </Card>
         </Container>
     );
