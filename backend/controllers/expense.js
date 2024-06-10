@@ -65,7 +65,7 @@ exports.updateExpense = async (req, res) => {
         console.log(expense);
         const updateExpense = Number(req.user.totalExpense) + (Number(amount) - Number(expense.amount));
         await User.findByIdAndUpdate(req.user, { $set: { totalExpense: updateExpense } });
-        res.status(201).json('successfully updated');
+        res.status(201).json(expense);
 
     }
     catch (err) {
